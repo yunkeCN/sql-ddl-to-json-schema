@@ -97,13 +97,13 @@ O_CREATE_TABLE_CREATE_DEFINITION -> (
             }
           }%}
 
-      # | O_DATATYPE __ P_COLUMN_DEFINITION_GENERATED:+
-      #     {% d => {
-      #       return {
-      #         datatype: d[0].value,
-      #         def: d[2]
-      #       }
-      #     }%}
+      | O_DATATYPE __ O_COLUMN_DEFINITION_GENERATED:+
+          {% d => {
+            return {
+              datatype: d[0].value,
+              def: d[2]
+            }
+          }%}
 
     ) {% d => {
       return {
@@ -261,12 +261,29 @@ P_INDEX_COLUMN -> S_IDENTIFIER
 # Generated definition for generated columns
 #
 # https://dev.mysql.com/doc/refman/5.7/en/create-table-generated-columns.html
+#
+# NOTE: This is yet untested! Generated columns make use of
+# O_EXPRESSION, which is also untested (see the expressions.ne
+# file for more info). - duartealexf
 
-# P_COLUMN_DEFINITION_GENERATED ->
-#  ( %K_GENERATED __ %K_ALWAYS __ ) %K_AS __ O_EXPRESSION
-#      [VIRTUAL | STORED] [NOT NULL | NULL]
-#      [UNIQUE [KEY]] [[PRIMARY] KEY]
-#      [COMMENT 'string']
+O_COLUMN_DEFINITION_GENERATED -> (
+    ( %K_GENERATED __ %K_ALWAYS __ ):?
+    %K_AS __ O_EXPRESSION                         {% d => { return { expression: d[3] }} %}
+  | ( %K_VIRTUAL {% id %} | %K_STORED {% id %} )  {% d => { return { storage: d[0].value }} %}
+  | (
+      %K_NOT __ %K_NULL                           {% d => { return { nullable: false }} %}
+    | %K_NULL                                     {% d => { return { nullable: true }} %}
+  ) {% id %}
+  | %K_UNIQUE ( __ %K_KEY ):?                     {% d => { return { unique: true }} %}
+  | (%K_PRIMARY __):? %K_KEY                      {% d => { return { primary: true }} %}
+  | %K_COMMENT __ O_COMMENT                       {% d => { return { comment: d[2].value }} %}
+)
+  {% d => {
+    return {
+      id: 'O_COLUMN_DEFINITION_GENERATED',
+      def: d[0]
+    }
+  } %}
 
 # =============================================================
 # Create table options
