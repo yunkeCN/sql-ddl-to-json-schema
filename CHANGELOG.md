@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.3.0"></a>
+# [3.3.0](https://github.com/duartealexf/sql-ddl-to-json-schema/compare/v3.2.2...v3.3.0) (2019-07-03)
+
+
+### Bug Fixes
+
+* 修复安全漏洞 ([8e90012](https://github.com/duartealexf/sql-ddl-to-json-schema/commit/8e90012))
+
+
+### Features
+
+* support keyword "nullable" from Open API 3 specification ([5179983](https://github.com/duartealexf/sql-ddl-to-json-schema/commit/5179983))
+* 更新版本号 ([b85b39f](https://github.com/duartealexf/sql-ddl-to-json-schema/commit/b85b39f))
+
+
+
 <a name="3.1.0"></a>
 # [3.1.0](https://github.com/duartealexf/sql-ddl-to-json-schema/compare/v3.0.1...v3.1.0) (2019-04-07)
 
