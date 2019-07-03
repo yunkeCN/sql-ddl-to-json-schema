@@ -125,6 +125,9 @@ class Column {
     if (typeof this.default_exp !== 'undefined') {
       json['x-default-exp'] = this.default_exp;
     }
+    if (this.isNullable) {
+      json.nullable = true;
+    }
     return json;
   }
 }
